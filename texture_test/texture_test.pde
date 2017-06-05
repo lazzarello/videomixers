@@ -23,10 +23,9 @@ void setup() {
   size(720, 480, P3D);
   colorMode(RGB, 255);
   
-  enable[0]=enable[1]=enable[2]=enable[3]=false; // this is a default to enable all channels
+  enable[0]=enable[1]=enable[2]=enable[3]=true; // this is a default to enable all channels
+  enable[4]=false;
   
-  enable[3]=true;
-  enable[4]=true;
   // these are frame offsets for the modulo looping in the draw() function
   for ( int i = 0; i < 4; i++ ) {
     frames[i+1]=i*10;
@@ -47,6 +46,14 @@ void draw() {
     frames[i] %= seq1.length-1;
   }
   
+  blendMode(BLEND);
+  fill(0);
+  stroke(0);
+  tint(255,100);
+  rect(0,0,width,height);
+  blendMode(ADD);
+  
+  // logic to draw layers based on user input
   // why does this shape originate at the corner?
   if (enable[1]) {
     tint(255,200);
