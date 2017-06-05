@@ -33,7 +33,6 @@ void setup() {
   }
   
   background(100);
-  rectMode(CENTER); // this sets 3D coordinates to originate from the center of the window
   fill(51, 127, 50);
   stroke(255);
   x = width/2;
@@ -48,10 +47,39 @@ void draw() {
     frames[i] %= seq1.length-1;
   }
   
+  // why does this shape originate at the corner?
   if (enable[1]) {
+    tint(255,200);
+    // this translates to originate the shape at 640x360 but it appears to originate at 0,0
     translate(width/2,height/2);
     beginShape();
     texture(seq1[frames[1]]);
+    textureMode(NORMAL);
+    vertex(-x,-y,0,0,0);
+    vertex(x,-y,0,1,0);
+    vertex(x,y,0,1,1);  
+    vertex(-x,y,0,0,1);
+    endShape(CLOSE);
+  }
+  if (enable[2]) {
+    tint(255,200);
+    // this translates the original shape to 0,0. WTF?
+    translate(0,0);
+    beginShape();
+    texture(seq1[frames[2]]);
+    textureMode(NORMAL);
+    vertex(-x,-y,0,0,0);
+    vertex(x,-y,0,1,0);
+    vertex(x,y,0,1,1);  
+    vertex(-x,y,0,0,1);
+    endShape(CLOSE);
+  }
+  if (enable[3]) {
+    tint(60, 255, 255, 200);
+    // this translates the original shape to 0,0. WTF?
+    translate(0,0);
+    beginShape();
+    texture(seq1[frames[3]]);
     textureMode(NORMAL);
     vertex(-x,-y,0,0,0);
     vertex(x,-y,0,1,0);
