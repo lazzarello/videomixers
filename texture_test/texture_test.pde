@@ -45,17 +45,18 @@ void setup() {
 }
 
 void draw() {
-  translate(x,y,z);
-  //rotateZ(PI/8);
-  //rect(0,0,y,y);
-  beginShape();
-  texture(img);
-  // color the texture
-  tint(0,127,255);
-  vertex(-x,-y,0,0,0);
-  vertex(x,-y,0,x*2,0);
-  vertex(x,y,0,x*2,y*2);  
-  vertex(-x,y,0,0,y*2);
-  endShape(CLOSE);
-  //z++;
+  
+  frames[1]++;
+  frames[1] %= seq1.length-1;
+  
+  if (enable[1]) {
+    translate(width/2,height/2);
+    beginShape();
+    texture(seq1[frames[1]]);
+    vertex(-x,-y,0,0,0);
+    vertex(x,-y,0,x*2,0);
+    vertex(x,y,0,x*2,y*2);  
+    vertex(-x,y,0,0,y*2);
+    endShape(CLOSE);
+  }
 }
