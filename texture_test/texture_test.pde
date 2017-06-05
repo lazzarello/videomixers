@@ -27,13 +27,10 @@ void setup() {
   
   enable[0]=enable[1]=enable[2]=enable[3]=true; // this is a default to enable all channels
   
+  // these are frame offsets for the modulo looping in the draw() function
   for ( int i = 0; i < 4; i++ ) {
     frames[i+1]=i*10;
   }
-  //frames[1]=0;
-  //frames[2]=10;
-  //frames[3]=20;
-  //frames[4]=30;
   
   background(100);
   rectMode(CENTER); // this sets 3D coordinates to originate from the center of the window
@@ -46,8 +43,10 @@ void setup() {
 
 void draw() {
   
-  frames[1]++;
-  frames[1] %= seq1.length-1;
+  for ( int i = 1; i < 5; i++ ) {
+    frames[i]++;
+    frames[i] %= seq1.length-1;
+  }
   
   if (enable[1]) {
     translate(width/2,height/2);
