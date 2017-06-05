@@ -6,8 +6,6 @@ int frame1;
 int frame2;
 int tick;
 float funct;
-boolean enable1=true;
-boolean enable2=true;
 int padding;
 int blend_type;
 
@@ -22,11 +20,13 @@ void setup() {
   }
   
   frameRate(30);
-  size(1280, 720, P3D);
+  size(720, 480, P3D);
   colorMode(RGB, 255);
   
-  enable[0]=enable[1]=enable[2]=enable[3]=true; // this is a default to enable all channels
+  enable[0]=enable[1]=enable[2]=enable[3]=false; // this is a default to enable all channels
   
+  enable[3]=true;
+  enable[4]=true;
   // these are frame offsets for the modulo looping in the draw() function
   for ( int i = 0; i < 4; i++ ) {
     frames[i+1]=i*10;
@@ -80,6 +80,19 @@ void draw() {
     translate(0,0);
     beginShape();
     texture(seq1[frames[3]]);
+    textureMode(NORMAL);
+    vertex(-x,-y,0,0,0);
+    vertex(x,-y,0,1,0);
+    vertex(x,y,0,1,1);  
+    vertex(-x,y,0,0,1);
+    endShape(CLOSE);
+  }
+  if (enable[4]) {
+    tint(255, 120, 120, 200);
+    // this translates the original shape to 0,0. WTF?
+    translate(width/2,height/2);
+    beginShape();
+    texture(seq1[frames[4]]);
     textureMode(NORMAL);
     vertex(-x,-y,0,0,0);
     vertex(x,-y,0,1,0);
