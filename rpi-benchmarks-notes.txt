@@ -1,0 +1,143 @@
+Rpi 3 OpenGL KMS benchmarking and notes
+
+5V 1A USB power adapter
+
+glxgears running during all tests
+
+Plymouth desktop environment.
+
+Event Log
+
+  Browser, apt package install
+    Plymouth environment crashed, X restarted and presented the display manager login prompt
+
+  Bash tab completion with default terminal
+    frame drops to > 0.5 of stable
+
+  single thread apt package install
+    frame drops to > 0.5 of stable, need stdev
+
+  gvim, resize window
+    frame drops +/- 3 frames
+
+  running rpi-benchmark two times in a row
+    full GUI lockup, OS is responsive over SSH
+    required remote reboot
+
+  loading a contemporary commercial website on a hot day (25C) crashed display
+    vc4 kernel module null pointer dereference
+
+    ```
+    [ 1668.450930] Unable to handle kernel NULL pointer dereference at virtual address 00000088
+    [ 1668.450958] pgd = ad53c000
+    [ 1668.450970] [00000088] *pgd=00000000
+    [ 1668.450990] Internal error: Oops: 5 [#27] SMP ARM
+    [ 1668.451002] Modules linked in: bnep hci_uart btbcm bluetooth binfmt_misc panel_raspberrypi_touchscreen vc4 drm_kms_helper brcmfmac drm brcmutil snd_soc_core snd_compress cfg80211 snd_pcm_dmaengine syscopyarea sysfillrect sysimgblt rfkill snd_bcm2835 fb_sys_fops snd_pcm snd_timer snd i2c_gpio i2c_algo_bit bcm2835_gpiomem i2c_bcm2835 fixed uio_pdrv_genirq uio evdev fuse ipv6
+    [ 1668.451156] CPU: 0 PID: 2707 Comm: Xorg Tainted: G      D         4.9.24-v7+ #993
+    [ 1668.451165] Hardware name: BCM2835
+    [ 1668.451176] task: 8b39d880 task.stack: a2e60000
+    [ 1668.451268] PC is at validate_tile_binning_config+0xb4/0x19c [vc4]
+    [ 1668.451289] LR is at _raw_spin_unlock_irqrestore+0x3c/0x70
+    [ 1668.451303] pc : [<7f485174>]    lr : [<80718644>]    psr: 20000013
+    sp : a2e61d28  ip : 00000044  fp : a2e61d64
+    [ 1668.451316] r10: 00000000  r9 : 00000001  r8 : ab240c10
+    [ 1668.451327] r7 : 0000001b  r6 : 901da001  r5 : aa967f00  r4 : 00000011
+    [ 1668.451338] r3 : 00080000  r2 : 000005fa  r1 : 00000000  r0 : 00000000
+    [ 1668.451351] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+    [ 1668.451362] Control: 10c5383d  Table: 2d53c06a  DAC: 00000055
+    [ 1668.451373] Process Xorg (pid: 2707, stack limit = 0xa2e60210)
+    [ 1668.451385] Stack: (0xa2e61d28 to 0xa2e62000)
+    [ 1668.451400] 1d20:                   80114ffc 80114c44 00000000 0000001e 00000004 00000070
+    [ 1668.451416] 1d40: 00000010 7f4850c0 00000010 00000000 7f489c4c 0000005c a2e61dbc a2e61d68
+    [ 1668.451432] 1d60: 7f485940 7f4850cc 00001000 00000000 adbcb000 00000001 aa967f00 ab1e6600
+    [ 1668.451448] 1d80: 00000000 ab1e6600 901da000 7f48d928 ab1e669c aa9679c0 aa967f00 ab1e6600
+    [ 1668.451464] 1da0: aa967180 ab240c10 00000000 00000060 a2e61e1c a2e61dc0 7f47f3ac 7f485874
+    [ 1668.451480] 1dc0: 000000a0 a2e61dc0 aa967180 000000a0 ab240c10 ab1e669c aa967f40 adbcb000
+    [ 1668.451496] 1de0: 00000048 aa967180 0000009c 7f488034 aa836500 00000000 aa967180 7f488034
+    [ 1668.451512] 1e00: aa836500 000000a0 c0a06440 adbcb000 a2e61efc a2e61e20 7f333c30 7f47ecb0
+    [ 1668.451529] 1e20: 0000e200 00000001 7f48ad84 00000055 a2e61ea4 a2e61e50 7f47eca4 000000a0
+    [ 1668.451545] 1e40: 00000001 a2e61e50 7ed3c848 00000040 a2e61e8c 20000013 ae082000 aaacb898
+    [ 1668.451561] 1e60: 560f5000 00000055 ad53d580 ad6013d4 aef3a840 00000000 a2e61ea4 a2e61fb0
+    [ 1668.451578] 1e80: 8b39d880 0000080f 560f5870 ad6e6540 ad6e6578 80719258 a2e61efc a2e61ea8
+    [ 1668.451593] 1ea0: 80719258 8016ae88 a2e61ed4 a2e61eb8 8012c020 8012bdb4 00000002 8b077fc0
+    [ 1668.451610] 1ec0: a2e61ef8 00000000 00000800 00000008 8012c158 7ed3c848 ab1ac828 ab200480
+    [ 1668.451626] 1ee0: c0a06440 0000000a a2e60000 00000000 a2e61f7c a2e61f00 802831cc 7f333a30
+    [ 1668.451642] 1f00: 805d9a80 805d973c a2e61f5c a2e61f18 8018ce14 805d9a68 00025250 00000000
+    [ 1668.451658] 1f20: a09e3ea0 00107d88 00000684 00000000 10f6729b 00000000 a2e61f88 00000001
+    [ 1668.451674] 1f40: 54d93ac4 00000107 80108244 a2e60000 a2e61f84 ab200480 7ed3c848 ab200480
+    [ 1668.451690] 1f60: c0a06440 0000000a a2e60000 00000000 a2e61fa4 a2e61f80 80283984 8028312c
+    [ 1668.451708] 1f80: 00000001 5611165c 7ed3c848 c0a06440 00000036 80108244 00000000 a2e61fa8
+    [ 1668.451723] 1fa0: 801080c0 8028394c 5611165c 7ed3c848 0000000a c0a06440 7ed3c848 00000001
+    [ 1668.451740] 1fc0: 5611165c 7ed3c848 c0a06440 00000036 7ed3c848 00000040 00000040 00000001
+    [ 1668.451756] 1fe0: 76e19080 7ed3c81c 76e0082c 76ba2f2c 60000010 0000000a 00000000 00000000
+    [ 1668.451883] [<7f485174>] (validate_tile_binning_config [vc4]) from [<7f485940>] (vc4_validate_bin_cl+0xd8/0x2e0 [vc4])
+    [ 1668.452000] [<7f485940>] (vc4_validate_bin_cl [vc4]) from [<7f47f3ac>] (vc4_submit_cl_ioctl+0x708/0x938 [vc4])
+    [ 1668.452338] [<7f47f3ac>] (vc4_submit_cl_ioctl [vc4]) from [<7f333c30>] (drm_ioctl+0x20c/0x428 [drm])
+    [ 1668.452586] [<7f333c30>] (drm_ioctl [drm]) from [<802831cc>] (do_vfs_ioctl+0xac/0x820)
+    [ 1668.452612] [<802831cc>] (do_vfs_ioctl) from [<80283984>] (SyS_ioctl+0x44/0x6c)
+    [ 1668.452636] [<80283984>] (SyS_ioctl) from [<801080c0>] (ret_fast_syscall+0x0/0x1c)
+    [ 1668.452653] Code: e5981100 e38cc044 e5983104 e0822082 (e5911088)
+    [ 1668.452713] ---[ end trace d2bcdba4ec0bca7a ]---
+    ```
+
+    playback of raw frames on a P3D canvas crashes desktop and reboots to display manager login prompt
+
+    Loading h.264 video fails with "cannot load GStreamer" and the kernel spits out the following
+
+```
+    [   40.700133] [drm:vc4_check_tex_size [vc4]] *ERROR* Overflow in 512x16 (512x16) fbo size (32768 + 8192 > 24576)
+    [  381.727061] [drm:vc4_validate_bin_cl [vc4]] *ERROR* 0x00000000: packet 112 (VC4_PACKET_TILE_BINNING_MODE_CONFIG) failed to validate
+    [  381.738401] [drm:vc4_validate_bin_cl [vc4]] *ERROR* 0x00000000: packet 112 (VC4_PACKET_TILE_BINNING_MODE_CONFIG) failed to validate
+    [  381.968116] [drm:vc4_validate_bin_cl [vc4]] *ERROR* 0x00000000: packet 112 (VC4_PACKET_TILE_BINNING_MODE_CONFIG) failed to validate
+    [  381.969724] [drm:vc4_validate_bin_cl [vc4]] *ERROR* 0x00000000: packet 112 (VC4_PACKET_TILE_BINNING_MODE_CONFIG) failed to validate
+    [  382.014854] [drm:vc4_validate_bin_cl [vc4]] *ERROR* 0x00000000: packet 112 (VC4_PACKET_TILE_BINNING_MODE_CONFIG) failed to validate
+    [  382.061748] vc4-drm soc:gpu: failed to allocate buffer with size 2236416
+    [  543.791438] vc4-drm soc:gpu: failed to allocate buffer with size 3244032
+    [  543.794684] vc4-drm soc:gpu: failed to allocate buffer with size 3244032
+    [  543.794861] [drm:vc4_bo_create [vc4]] *ERROR* Failed to allocate from CMA:
+    [  543.794867] [drm] num bos allocated: 328
+    [  543.794874] [drm] size bos allocated: 229516kb
+    [  543.794878] [drm] num bos used: 321
+    [  543.794884] [drm] size bos used: 229488kb
+    [  543.794890] [drm] num bos cached: 7
+    [  543.794894] [drm] size bos cached: 28kb
+    [  543.803884] vc4-drm soc:gpu: failed to allocate buffer with size 3244032
+    [  544.179648] [drm:vc4_validate_bin_cl [vc4]] *ERROR* 0x00000000: packet 112 (VC4_PACKET_TILE_BINNING_MODE_CONFIG) failed to validate
+    [  544.435682] vc4-drm soc:gpu: failed to allocate buffer with size 3047424
+    [  695.591523] [drm:vc4_submit_cl_ioctl [vc4]] *ERROR* Failed to look up GEM BO 0: 32
+    [  695.796143] [drm:vc4_submit_cl_ioctl [vc4]] *ERROR* Failed to look up GEM BO 0: 32
+    [  695.850322] [drm:vc4_submit_cl_ioctl [vc4]] *ERROR* Failed to look up GEM BO 0: 32
+    [  993.405301] vc4-drm soc:gpu: failed to allocate buffer with size 3293184
+    [  993.405853] vc4-drm soc:gpu: failed to allocate buffer with size 3293184
+    [  993.405895] [drm:vc4_bo_create [vc4]] *ERROR* Failed to allocate from CMA:
+    [  993.405898] [drm] num bos allocated: 338
+    [  993.405900] [drm] size bos allocated: 234448kb
+    [  993.405902] [drm] num bos used: 338
+    [  993.405905] [drm] size bos used: 234448kb
+    [  993.405907] [drm] num bos cached: 0
+    [  993.405909] [drm] size bos cached: 0kb
+    [  993.406456] vc4-drm soc:gpu: failed to allocate buffer with size 3293184
+    [  993.500101] vc4-drm soc:gpu: failed to allocate buffer with size 3428352
+    [  993.500313] vc4-drm soc:gpu: failed to allocate buffer with size 3428352
+    [  993.500368] [drm:vc4_bo_create [vc4]] *ERROR* Failed to allocate from CMA:
+    [  993.500372] [drm] num bos allocated: 318
+    [  993.500374] [drm] size bos allocated: 226664kb
+    [  993.500376] [drm] num bos used: 318
+    [  993.500378] [drm] size bos used: 226664kb
+    [  993.500380] [drm] num bos cached: 0
+    [  993.500382] [drm] size bos cached: 0kb
+    [  993.500806] vc4-drm soc:gpu: failed to allocate buffer with size 3428352
+    [  993.630972] vc4-drm soc:gpu: failed to allocate buffer with size 3428352
+    [  993.927548] vc4-drm soc:gpu: failed to allocate buffer with size 3301376
+    [  993.927765] vc4-drm soc:gpu: failed to allocate buffer with size 3301376
+    [  993.927831] [drm:vc4_bo_create [vc4]] *ERROR* Failed to allocate from CMA:
+    [  993.927834] [drm] num bos allocated: 328
+    [  993.927837] [drm] size bos allocated: 230404kb
+    [  993.927840] [drm] num bos used: 328
+    [  993.927843] [drm] size bos used: 230404kb
+    [  993.927845] [drm] num bos cached: 0
+    [  993.927847] [drm] size bos cached: 0kb
+    [  993.928253] vc4-drm soc:gpu: failed to allocate buffer with size 3301376
+```
+
+    playback of GPU h.264 video via a single channel with normal mode is a success!
