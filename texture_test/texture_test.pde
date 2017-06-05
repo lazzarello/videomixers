@@ -53,10 +53,11 @@ void draw() {
     translate(width/2,height/2);
     beginShape();
     texture(seq1[frames[1]]);
+    textureMode(NORMAL);
     vertex(-x,-y,0,0,0);
-    vertex(x,-y,0,x*2,0);
-    vertex(x,y,0,x*2,y*2);  
-    vertex(-x,y,0,0,y*2);
+    vertex(x,-y,0,1,0);
+    vertex(x,y,0,1,1);  
+    vertex(-x,y,0,0,1);
     endShape(CLOSE);
   }
 }
