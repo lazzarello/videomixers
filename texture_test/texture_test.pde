@@ -46,6 +46,8 @@ void draw() {
     frames[i] %= seq1.length-1;
   }
   
+  // this looks like some procedural magic. Intuitively I think it's blending "a layer"
+  // with a tinted rect() by adding them? hard to tell with a bunch of anon function calls.
   blendMode(BLEND);
   fill(0);
   stroke(0);
@@ -107,4 +109,5 @@ void draw() {
     vertex(-x,y,0,0,1);
     endShape(CLOSE);
   }
+  println("Frame Rate is " + frameRate);
 }
