@@ -1,6 +1,6 @@
 Rpi 3 OpenGL KMS benchmarking and notes
 
-5V 1A USB power adapter
+5V 2A USB power adapter
 
 glxgears running during all tests
 
